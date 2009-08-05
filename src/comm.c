@@ -165,6 +165,7 @@ struct comm comms[RC_LAST + 1] =
 #ifdef COPY_PASTE
   { "defscrollback",	ARGS_1 },
 #endif
+  { "search",           ARGS_1 },
   { "defshell",		ARGS_1 },
   { "defsilence",	ARGS_1 },
   { "defslowpaste",	ARGS_1 },

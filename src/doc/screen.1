@@ -415,6 +415,8 @@ of the command.
 The following table shows the default key bindings:
 .IP "\fBC-a '\fP	(select)"
 Prompt for a window name or number to switch to.
+.IP "\fBC-a /\fP (search)"
+Prompt for a window name to search.
 .IP "\fBC-a ""\fP	(windowlist -b)"
 Present a list of all windows for selection.
 .IP "\fBC-a 0\fP	(select 0)"
@@ -2907,6 +2909,14 @@ Set the size of the scrollback buffer for the current windows to \fInum\fP
 lines. The default scrollback is 100 lines.
 See also the \*Qdefscrollback\*U command and use \*QC-a i\*U to view the 
 current setting.
+.sp
+.ne 3
+.BR "search " [ \fIText ]
+.PP
+Search for \fIText\fP in window names/titles.
+If any windows which contains \fIText\fP in the name are found, switch to
+the last used one.  The parameter is optional and if omitted, you get
+prompted for a search text.
 .sp
 .ne 3
 .BR "select " [ \fIWindowID ]

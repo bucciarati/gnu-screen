@@ -142,6 +142,8 @@ static char **SaveArgs __P((char **));
 static int  IsNum __P((char *, int));
 static void Colonfin __P((char *, int, char *));
 static void InputSelect __P((void));
+static void InputSearch __P((void));
+static void SearchFin __P((char *, int, char *));
 static void InputSetenv __P((char *));
 static void InputAKA __P((void));
 #ifdef MULTIUSER
@@ -542,6 +544,7 @@ InitKeytab()
     }
 #endif
 
+  ktab['/'].nr = RC_SEARCH;
   ktab['h'].nr = RC_HARDCOPY;
 #ifdef BSDJOBS
   ktab['z'].nr = ktab[Ctrl('z')].nr = RC_SUSPEND;
@@ -1211,6 +1214,12 @@ int key;
   msgok = display && !*rc_name;
   switch(nr)
     {
+    case RC_SEARCH:
+      if (!*args)
+        InputSearch();
+      else
+        SearchFin(args[0], strlen(args[0]), NULL);
+      break;
     case RC_SELECT:
       if (!*args)
         InputSelect();
@@ -5830,11 +5839,42 @@ char *data;	/* dummy */
     }
 }
 
-    
+/*
+ * Search for a window title pattern.
+ * If we find any, switch to the first (which is the last used one)
+ *                              -- Fernando Vezzosi <fv@linuxvar.it>
+ */
+static void
+SearchFin(buf, len, data)
+char *buf;
+int len;
+char *data;
+{
+  int i=0;
+  struct win *wptr;
+  if(!len || !display)
+    return;
+
+  for(wptr=windows; wptr; wptr=wptr->w_next, i++){
+    if(strstr(wptr->w_title, buf)){
+      SwitchWindow(wptr->w_number);
+/*      Msg(0, "Found, crossed %d windows", i);*/
+      return;
+    }
+  }
+  Msg(0, "Pattern '%s' not found [%d windows]", buf, i);
+}
+
 static void
 InputSelect()
 {
   Input("Switch to window: ", 20, INP_COOKED, SelectFin, NULL, 0);
+}
+
+static void
+InputSearch()
+{
+  Input("Search: ", 100, INP_COOKED, SearchFin, NULL);
 }
 
 static char setenv_var[31];
